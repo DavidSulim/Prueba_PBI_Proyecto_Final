@@ -92,5 +92,4 @@ La interfaz web incluye:
 
 ✨ Diseño con TailwindCSS
 
-En la esquina superior derecha encontrarás la leyenda:
-“Elaborado por Ing. David Sulim Garcia Casimbe”
+Elaborado por Ing. David Sulim Garcia Casimbe
