@@ -1,72 +1,96 @@
-# Prueba PBI - Proyecto Final
-**Entrega:** Proyecto completo para prueba técnica (backend + frontend + scripts SQL + Power BI helpers)
+# 📊 Prueba PBI - Proyecto Final
 
-**Autor:** Ing. David Sulim Garcia Casimbe
-
----
-
-## Contenido del repositorio
-- `server.js` - Backend en Node.js + Express para recibir archivos y exponer API.
-- `package.json` - Dependencias.
-- `schema.sql` - Script SQL para crear la tabla `ventas` (SQLite).
-- `ventas.db` - (no incluida por defecto) archivo SQLite generado al correr el servidor.
-- `uploads/` - Carpeta temporal para archivos subidos.
-- `frontend/index.html` - Interfaz Vue 3 (CDN) con formulario de carga y vista de datos.
-- `frontend/` - carpeta con la interfaz (usa Tailwind CDN).
-- `Ventas.csv` - Archivo provisto con datos de ejemplo (copia del entregado).
-- `PowerBI/` - Scripts y guía para crear el reporte en Power BI Desktop.
-- `Prueba_PBI_Proyecto_Final.zip` - Archivo ZIP final (este archivo que estás descargando).
+🚀 Proyecto de prueba técnica que integra **backend en Node.js + Express**, una **base de datos SQLite**, un **frontend con Vue 3 y TailwindCSS**, y soporte para generar reportes en **Power BI**.
 
 ---
 
-## Cómo ejecutar (local)
-1. Tener Node.js (>=16).
-2. En la carpeta raíz del proyecto:
+## 📂 Contenido del proyecto
+
+- ⚙️ **Backend (Node.js + Express)**  
+  - `server.js` → Servidor principal con endpoints de carga y consulta de ventas.  
+  - `schema.sql` → Script SQL para la creación de la tabla `ventas`.  
+  - `ventas.db` → Base de datos SQLite (se genera al correr el servidor).  
+
+- 💻 **Frontend (Vue 3 + Tailwind)**  
+  - `frontend/index.html` → Interfaz web para cargar archivos y visualizar ventas.  
+
+- 📑 **Datos de prueba**  
+  - `Ventas.csv` → Archivo de ventas para pruebas iniciales.  
+
+- 📈 **Power BI**  
+  - `PowerQuery_M.txt` → Script M para consumir la API en Power BI.  
+  - `README.md` → Guía paso a paso para crear el modelo y visualizaciones.  
+
+- 📝 **Documentación**  
+  - `README.md` → Este archivo con instrucciones y detalles del proyecto.  
+  - `.gitignore` → Configuración lista para repositorio en GitHub.  
+
+---
+
+## ⚙️ Instalación y ejecución
+
+1. Clonar este repositorio:
    ```bash
-   npm install
-   node server.js
-   ```
-   El servidor correrá en `http://localhost:3000`.
+   git clone <URL_DEL_REPO>
+   cd Prueba_PBI_Proyecto_Final
 
-3. Abrir `frontend/index.html` en el navegador (puede servirlo con `Live Server` o abrir directamente el archivo).
-   - Subir el archivo `Ventas.csv` o un `.xlsx` con las columnas: `Fecha, Producto, Cantidad, Precio Unitario, Total`.
-   - Tras la carga, los datos se guardarán en `ventas.db` (SQLite) y se mostrarán en la tabla de la interfaz.
+2. Instalar dependencias: 
+   - npm install
 
----
+3. Ejecutar el servidor: 
+   - node server.js
 
-## Estructura de la base de datos (schema.sql)
-La tabla principal es `ventas` con columnas:
-- `id` INTEGER PRIMARY KEY
-- `fecha` TEXT (YYYY-MM-DD)
-- `producto` TEXT
-- `cantidad` REAL
-- `precio_unitario` REAL
-- `total` REAL
-- `created_at` DATETIME
+Servidor disponible en: http://localhost:3000
 
----
+4. Abrir la interfaz:
 
-## API
-- `POST /api/ventas/upload` -> Espera un form-data con campo `file` (csv/xlsx/xls). Inserta registros válidos.
-- `GET /api/ventas` -> Retorna todos los registros en JSON.
+   - Ir a la carpeta frontend.
 
----
+   - Abrir index.html en el navegador (se recomienda usar VS  Code con la extensión Live Server).
 
-## Power BI - instrucciones y script (PowerBI/README.md)
-Dentro de la carpeta `PowerBI` se incluye un script Power Query (M) y pasos para conectar Power BI a la API creada y generar las visualizaciones requeridas: Ventas por Mes, Ventas por Producto, Evolución de Ventas, Comparativo de Cantidad Vendida por Producto, Precio promedio por producto.
+📡 Endpoints disponibles
 
-**Nota importante:** No es posible generar un archivo `.pbix` desde este entorno. En su lugar incluí:
-- `PowerBI/PowerQuery_M.txt` -> código M para pegar en Power Query (Get Data -> Blank Query -> Advanced Editor).
-- Guía paso a paso para crear las visualizaciones y modelo estrella.
+      POST /api/ventas/upload
+      Sube un archivo .csv o .xlsx con las columnas:
 
----
+      Fecha, Producto, Cantidad, Precio Unitario, Total
 
-## Listo para GitHub
-Incluí un `.gitignore` (node_modules, ventas.db, uploads) y un README para que puedas subir directamente.
 
----
+      GET /api/ventas
+      Devuelve todas las ventas almacenadas en formato JSON.
+📊 Power BI
 
-## Observaciones y limitaciones
-- Se creó el backend en Node.js por portabilidad. Si prefieres Laravel (PHP) lo puedo convertir, pero eso llevaría trabajo adicional.
-- No pude generar un archivo `.pbix` en este entorno; sin embargo, la carpeta `PowerBI` contiene todo lo necesario para construir el reporte localmente en Power BI Desktop.
-- El frontend incluye la leyenda solicitada: **"Elaborado por Ing. David Sulim Garcia Casimbe"** visible en la interfaz.
+Abrir Power BI Desktop.
+
+Ir a Obtener datos → Consulta en blanco → Editor avanzado.
+
+Pegar el contenido de PowerQuery_M.txt.
+
+Conectar y cargar datos desde la API (http://localhost:3000/api/ventas).
+
+Crear el modelo estrella y las visualizaciones:
+
+📅 Ventas por Mes
+
+📦 Ventas por Producto
+
+📈 Evolución de Ventas
+
+⚖️ Comparativo de Cantidad por Producto
+
+💲 Precio promedio por Producto
+
+🎨 Interfaz
+
+La interfaz web incluye:
+
+📤 Carga de archivos (.csv, .xlsx, .xls)
+
+📋 Visualización de ventas en tabla
+
+🔄 Botón para refrescar datos
+
+✨ Diseño con TailwindCSS
+
+En la esquina superior derecha encontrarás la leyenda:
+“Elaborado por Ing. David Sulim Garcia Casimbe”
