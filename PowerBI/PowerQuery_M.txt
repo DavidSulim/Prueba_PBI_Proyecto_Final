@@ -1,0 +1,11 @@
+// Power Query M script to fetch from API and shape data
+let
+    Source = Json.Document(Web.Contents("http://localhost:3000/api/ventas")),
+    ToTable = Table.FromList(Source, Splitter.SplitByNothing(), null, null, ExtraValues.Error),
+    Expanded = Table.ExpandRecordColumn(ToTable, "Column1", {"id","fecha","producto","cantidad","precio_unitario","total"}, {"id","Fecha","Producto","Cantidad","Precio Unitario","Total"}),
+    ChangedType = Table.TransformColumnTypes(Expanded, {{"Fecha", type date}, {"Producto", type text}, {"Cantidad", Int64.Type}, {"Precio Unitario", type number}, {"Total", type number}}),
+    // Example: create Year/Month columns
+    AddedYear = Table.AddColumn(ChangedType, "Year", each Date.Year([Fecha]), Int64.Type),
+    AddedMonth = Table.AddColumn(AddedYear, "Month", each Date.Month([Fecha]), Int64.Type)
+in
+    AddedMonth

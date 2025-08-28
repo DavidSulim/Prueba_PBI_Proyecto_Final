@@ -1,0 +1,1 @@
+Abre index.html en el navegador. Cambia la URL de la API si tu backend no corre en http://localhost:3000

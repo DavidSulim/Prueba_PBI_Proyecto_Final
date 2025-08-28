@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Prueba PBI - Upload</title>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center p-6">
+  <div id="app" class="w-full max-w-3xl">
+    <div class="bg-white shadow-2xl rounded-2xl p-8">
+      <header class="flex items-center justify-between mb-6">
+        <h1 class="text-2xl font-semibold">Prueba PBI — Subir Ventas</h1>
+        <div class="text-right text-sm text-gray-600">
+          <div>Elaborado por</div>
+          <div class="font-medium">Ing. David Sulim Garcia Casimbe</div>
+        </div>
+      </header>
+
+      <form @submit.prevent="uploadFile" class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-700">Selecciona archivo (.xlsx .xls .csv)</label>
+          <input type="file" ref="fileInput" @change="onFileChange" accept=".xlsx,.xls,.csv" class="mt-2" />
+        </div>
+
+        <div class="flex items-center space-x-4">
+          <button class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700" :disabled="!selectedFile">Subir</button>
+          <button type="button" class="px-4 py-2 bg-gray-200 rounded-lg" @click="fetchVentas">Refrescar datos</button>
+          <div v-if="uploadMessage" class="text-sm text-gray-700">{{ uploadMessage }}</div>
+        </div>
+      </form>
+
+      <section class="mt-6">
+        <h2 class="text-lg font-medium mb-2">Últimas ventas (desde API)</h2>
+        <div class="bg-gray-50 rounded-lg p-4">
+          <table class="w-full text-sm">
+            <thead class="text-left text-gray-600">
+              <tr>
+                <th>Fecha</th><th>Producto</th><th class="text-right">Cantidad</th><th class="text-right">Precio</th><th class="text-right">Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="v in ventas" :key="v.id" class="border-t">
+                <td>{{ v.fecha }}</td>
+                <td>{{ v.producto }}</td>
+                <td class="text-right">{{ v.cantidad }}</td>
+                <td class="text-right">{{ v.precio_unitario }}</td>
+                <td class="text-right font-semibold">{{ v.total }}</td>
+              </tr>
+              <tr v-if="ventas.length===0"><td colspan="5" class="text-center text-gray-500 py-4">No hay datos</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <footer class="mt-6 text-xs text-gray-500">Proyecto realizado por Ing. David Sulim Garcia Casimbe</footer>
+    </div>
+  </div>
+
+  <script>
+  const { createApp, ref } = Vue;
+  createApp({
+    data() {
+      return {
+        selectedFile: null,
+        uploadMessage: '',
+        ventas: []
+      }
+    },
+    methods: {
+      onFileChange(e) {
+        this.selectedFile = e.target.files[0] || null;
+        this.uploadMessage = '';
+      },
+      async uploadFile() {
+        if (!this.selectedFile) { this.uploadMessage = 'Selecciona un archivo primero.'; return; }
+        const form = new FormData();
+        form.append('file', this.selectedFile);
+        this.uploadMessage = 'Subiendo...';
+        try {
+          const res = await fetch('http://localhost:3000/api/ventas/upload', {
+            method: 'POST',
+            body: form
+          });
+          const data = await res.json();
+          if (!res.ok) {
+            this.uploadMessage = 'Error: ' + (data.error || JSON.stringify(data));
+          } else {
+            this.uploadMessage = data.message + ' — ' + data.inserted + ' filas insertadas.';
+            this.fetchVentas();
+          }
+        } catch (err) {
+          this.uploadMessage = 'Error de conexión: ' + err.message;
+        }
+      },
+      async fetchVentas() {
+        try {
+          const res = await fetch('http://localhost:3000/api/ventas');
+          const data = await res.json();
+          this.ventas = Array.isArray(data) ? data : [];
+        } catch (err) {
+          this.uploadMessage = 'No se pudo consultar la API.';
+        }
+      }
+    },
+    mounted() {
+      this.fetchVentas();
+    }
+  }).mount('#app');
+  </script>
+</body>
+</html>
